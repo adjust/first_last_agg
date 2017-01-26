@@ -19,3 +19,14 @@ CREATE AGGREGATE last(anyelement) (
     SFUNC = last_sfunc,
     STYPE = anyelement
 );
+
+CREATE OR REPLACE FUNCTION nullable_last_sfunc(anyelement, anyelement)
+RETURNS anyelement
+AS '$libdir/first_last_agg', 'nullable_last_sfunc'
+LANGUAGE C IMMUTABLE CALLED ON NULL INPUT;
+
+DROP AGGREGATE IF EXISTS nullable_last(anyelement);
+CREATE AGGREGATE nullable_last(anyelement) (
+    SFUNC = nullable_last_sfunc,
+    STYPE = anyelement
+);

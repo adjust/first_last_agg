@@ -15,6 +15,7 @@ PG_MODULE_MAGIC;
 
 extern Datum first_sfunc(PG_FUNCTION_ARGS);
 extern Datum last_sfunc(PG_FUNCTION_ARGS);
+extern Datum nullable_last_sfunc(PG_FUNCTION_ARGS);
 
 
 PG_FUNCTION_INFO_V1(first_sfunc);
@@ -40,4 +41,21 @@ last_sfunc(PG_FUNCTION_ARGS)
 	/* simply return the second argument */
 	element = PG_GETARG_DATUM(1);
 	PG_RETURN_DATUM(element);
+}
+
+
+PG_FUNCTION_INFO_V1(nullable_last_sfunc);
+
+Datum
+nullable_last_sfunc(PG_FUNCTION_ARGS)
+{
+	Datum	element;
+
+        if (PG_ARGISNULL(1)) {
+                PG_RETURN_NULL();
+        } else {
+                /* simply return the second argument */
+                element = PG_GETARG_DATUM(1);
+                PG_RETURN_DATUM(element);
+        }
 }
