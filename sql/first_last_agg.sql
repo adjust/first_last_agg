@@ -25,8 +25,25 @@ RETURNS anyelement
 AS '$libdir/first_last_agg', 'nullable_last_sfunc'
 LANGUAGE C IMMUTABLE CALLED ON NULL INPUT;
 
+CREATE OR REPLACE FUNCTION nullable_first_sfunc(anyelement, anyelement)
+RETURNS anyelement
+AS '$libdir/first_last_agg', 'nullable_first_sfunc'
+LANGUAGE C IMMUTABLE CALLED ON NULL INPUT;
+
+CREATE OR REPLACE FUNCTION nullable_first_final(anyelement)
+RETURNS anyelement
+AS '$libdir/first_last_agg', 'nullable_first_final'
+LANGUAGE C IMMUTABLE CALLED ON NULL INPUT;
+
 DROP AGGREGATE IF EXISTS nullable_last(anyelement);
 CREATE AGGREGATE nullable_last(anyelement) (
     SFUNC = nullable_last_sfunc,
     STYPE = anyelement
+);
+
+DROP AGGREGATE IF EXISTS nullable_first(anyelement);
+CREATE AGGREGATE nullable_first(anyelement) (
+    SFUNC = nullable_first_sfunc,
+    STYPE = anyelement,
+    FINALFUNC = nullable_first_final
 );
