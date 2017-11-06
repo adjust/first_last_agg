@@ -33,8 +33,6 @@ matrix:
            - sudo -u postgres psql  -c "create user travis with superuser";
            - sudo make install
 
-env:
-  - COVERAGE=1 RELEASE_TESTING=1 DB_TESTING=1
 script:
   - make installcheck
 after_failure:
