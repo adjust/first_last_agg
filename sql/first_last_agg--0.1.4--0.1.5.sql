@@ -9,16 +9,14 @@ BEGIN
     EXECUTE $E$ ALTER FUNCTION last_sfunc(anyelement, anyelement) PARALLEL SAFE   $E$;
     EXECUTE $E$ ALTER FUNCTION first_sfunc(anyelement, anyelement) PARALLEL SAFE   $E$;
 
-    EXECUTE $E$ DROP AGGREGATE IF EXISTS first(anyelement) $E$;
-    EXECUTE $E$ CREATE AGGREGATE first(anyelement) (
+    EXECUTE $E$ CREATE OR REPLACE AGGREGATE first(anyelement) (
         SFUNC = first_sfunc,
         STYPE = anyelement,
         COMBINEFUNC = first_sfunc,
         parallel = SAFE
     ); $E$;
 
-    EXECUTE $E$ DROP AGGREGATE IF EXISTS last(anyelement) $E$;
-    EXECUTE $E$ CREATE AGGREGATE last(anyelement) (
+    EXECUTE $E$ CREATE OR REPLACE AGGREGATE last(anyelement) (
         SFUNC = last_sfunc,
         STYPE = anyelement,
         COMBINEFUNC = last_sfunc,
