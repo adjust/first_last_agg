@@ -1,0 +1,45 @@
+BEGIN;
+SET client_min_messages TO 'WARNING';
+
+CREATE EXTENSION first_last_agg VERSION '0.1.5';
+
+SELECT extversion
+FROM pg_extension
+WHERE extname = 'first_last_agg';
+
+ALTER EXTENSION first_last_agg UPDATE TO '0.1.6';
+
+SELECT extversion
+FROM pg_extension
+WHERE extname = 'first_last_agg';
+
+DROP EXTENSION first_last_agg;
+
+CREATE EXTENSION first_last_agg VERSION '0.1.4';
+
+SELECT extversion
+FROM pg_extension
+WHERE extname = 'first_last_agg';
+
+ALTER EXTENSION first_last_agg UPDATE TO '0.1.6';
+
+SELECT extversion
+FROM pg_extension
+WHERE extname = 'first_last_agg';
+
+CREATE TEMPORARY TABLE migration_test (
+    akey integer,
+    val1 integer,
+    val2 integer
+);
+
+INSERT INTO migration_test (akey, val1, val2)
+VALUES (1, 2, 1), (1, 4, 2), (1, 3, 3),
+       (2, 2, 1), (2, NULL, 2), (2, 5, 3);
+
+SELECT akey, first(val1 ORDER BY val2) AS first, last(val1 ORDER BY val2) AS last
+FROM migration_test
+GROUP BY akey
+ORDER BY akey;
+
+ROLLBACK;
