@@ -20,6 +20,20 @@ CREATE AGGREGATE last(anyelement) (
     STYPE = anyelement
 );
 
+/*
+ * NOTE: parallel safety and sorted aggregates
+ *
+ * The primary use of first()/last() is with per-aggregate ORDER BY, such as
+ * "last(col ORDER BY sort_col)".
+ * As of PostgreSQL 18, PostgreSQL does not apply the Parallel Aggregate plan
+ * node to aggregates with ORDER BY or DISTINCT modifiers, so PARALLEL SAFE +
+ * COMBINEFUNC have no effect on query performance for that pattern.
+ * ref.
+ * https://www.postgresql.org/docs/18/parallel-plans.html#PARALLEL-AGGREGATION
+ *
+ * So parallel aggregation is currently only expected to apply outside of these
+ * cases.
+ */
 
 DO $$
 DECLARE version_num integer;
